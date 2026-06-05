@@ -85,7 +85,10 @@ strong {
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .profile-menu {
