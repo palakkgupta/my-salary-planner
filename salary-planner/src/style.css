@@ -83,24 +83,69 @@ strong {
 .auth-panel--ready {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
-  padding: 10px 16px;
+  padding: 8px 12px;
 }
 
-.auth-panel--ready > div {
+.profile-menu {
+  position: relative;
+}
+
+.profile-trigger {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
   display: grid;
-  gap: 2px;
+  place-items: center;
+  cursor: pointer;
 }
 
-.auth-panel--ready strong {
-  font-size: 1.1rem;
-  line-height: 1.2;
+.profile-trigger svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--text);
 }
 
-.auth-panel--ready p {
-  font-size: 0.95rem;
-  line-height: 1.2;
+.profile-trigger:hover {
+  border-color: rgba(17, 100, 102, 0.35);
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: min(300px, calc(100vw - 36px));
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow);
+  display: none;
+  z-index: 5;
+}
+
+.profile-menu.is-open .profile-dropdown {
+  display: grid;
+  gap: 8px;
+}
+
+.profile-title {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.profile-email {
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.profile-logout {
+  justify-self: start;
 }
 
 .auth-panel p {
@@ -609,6 +654,10 @@ h2 {
   gap: 8px;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.month-header__right select {
+  min-width: 110px;
 }
 
 .month-tabs {

@@ -230,6 +230,7 @@ const view = {
   selectedMonthId: getCurrentMonthId(),
   selectedYear: getCurrentYear(),
   authMode: 'login',
+  profileMenuOpen: false,
 }
 
 let plannerMessage = ''
@@ -507,11 +508,25 @@ function renderLoginPage() {
 function renderTopNav() {
   return `
     <header class="auth-panel auth-panel--ready">
-      <div>
-        <strong>Signed in</strong>
-        <p>${auth.user?.email || ''}</p>
+      <div class="profile-menu ${view.profileMenuOpen ? 'is-open' : ''}">
+        <button
+          type="button"
+          class="profile-trigger"
+          aria-label="Open account menu"
+          aria-expanded="${view.profileMenuOpen ? 'true' : 'false'}"
+          data-profile-toggle
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20a8 8 0 1 1 16 0z" />
+          </svg>
+        </button>
+        <div class="profile-dropdown">
+          <p class="profile-title">Signed in as</p>
+          <p class="profile-email">${auth.user?.email || ''}</p>
+          <button type="button" class="action-button action-button--ghost profile-logout" data-auth-logout>Logout</button>
+        </div>
       </div>
-      <button type="button" class="action-button action-button--ghost" data-auth-logout>Logout</button>
     </header>
     <nav class="top-nav">
       <button type="button" data-nav="dashboard" class="top-nav__link ${view.page === 'dashboard' ? 'is-active' : ''}">Dashboard</button>
@@ -596,6 +611,15 @@ function renderMonthPage(year, monthId) {
           <h1>${selected.label} Planner (${year})</h1>
         </div>
         <div class="month-header__right">
+          <label for="month-selector-month">Month</label>
+          <select id="month-selector-month" data-month-selector>
+            ${months
+              .map(
+                (month) =>
+                  `<option value="${month.id}" ${month.id === selected.id ? 'selected' : ''}>${month.label}</option>`,
+              )
+              .join('')}
+          </select>
           <label for="year-selector-month">Year</label>
           <select id="year-selector-month" data-year-selector>
             ${getYearOptions()
@@ -608,15 +632,6 @@ function renderMonthPage(year, monthId) {
           <button type="button" class="action-button action-button--ghost" data-nav="dashboard">Back to Dashboard</button>
         </div>
       </header>
-
-      <nav class="month-tabs" aria-label="Month selection">
-        ${months
-          .map(
-            (month) =>
-              `<button type="button" class="month-tab ${month.id === selected.id ? 'month-tab--active' : ''}" data-open-month="${month.id}">${month.label}</button>`,
-          )
-          .join('')}
-      </nav>
 
       <section class="month-overview">
         <label class="salary-field">
@@ -909,11 +924,26 @@ function bindEvents() {
   })
 
   app.addEventListener('click', async (event) => {
+    let closedProfileMenu = false
+
+    if (view.profileMenuOpen && !event.target.closest('.profile-menu')) {
+      view.profileMenuOpen = false
+      closedProfileMenu = true
+    }
+
+    const profileToggle = event.target.closest('[data-profile-toggle]')
+    if (profileToggle) {
+      view.profileMenuOpen = !view.profileMenuOpen
+      render()
+      return
+    }
+
     const authModeButton = event.target.closest('[data-auth-mode]')
     if (authModeButton) {
       view.authMode = authModeButton.dataset.authMode
       auth.error = ''
       plannerMessage = ''
+      view.profileMenuOpen = false
       render()
       return
     }
@@ -938,6 +968,7 @@ function bindEvents() {
           password,
         )
         view.page = 'dashboard'
+        view.profileMenuOpen = false
         await hydrateFromRemote()
         render()
       } catch (error) {
@@ -955,6 +986,7 @@ function bindEvents() {
       plannerMessage = ''
       localStorage.removeItem(AUTH_TOKEN_KEY)
       view.page = 'login'
+      view.profileMenuOpen = false
       render()
       return
     }
@@ -963,14 +995,7 @@ function bindEvents() {
     if (navButton) {
       view.page = navButton.dataset.nav
       plannerMessage = ''
-      render()
-      return
-    }
-
-    const openMonthButton = event.target.closest('[data-open-month]')
-    if (openMonthButton) {
-      view.selectedMonthId = openMonthButton.dataset.openMonth
-      view.page = 'month'
+      view.profileMenuOpen = false
       render()
       return
     }
@@ -1016,6 +1041,9 @@ function bindEvents() {
       return
     }
 
+    if (closedProfileMenu) {
+      render()
+    }
   })
 }
 
