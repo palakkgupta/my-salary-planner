@@ -96,11 +96,12 @@ strong {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid transparent;
+  background: transparent;
   display: grid;
   place-items: center;
   cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
 }
 
 .profile-trigger svg {
@@ -110,7 +111,8 @@ strong {
 }
 
 .profile-trigger:hover {
-  border-color: rgba(17, 100, 102, 0.35);
+  border-color: rgba(17, 100, 102, 0.25);
+  background: rgba(17, 100, 102, 0.06);
 }
 
 .profile-dropdown {
