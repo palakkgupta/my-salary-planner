@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: salary-planner-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: salary_planner
+    ports:
+      - "5432:5432"
+    volumes:
+      - salary_planner_pg_data:/var/lib/postgresql/data
+
+volumes:
+  salary_planner_pg_data:

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: salary-planner
+    runtime: node
+    rootDir: salary-planner
+    buildCommand: npm install && npm run build
+    startCommand: npm run server
+    healthCheckPath: /api/health
+    envVars:
+      - key: PGSSLMODE
+        value: require
+      - key: JWT_SECRET
+        generateValue: true
