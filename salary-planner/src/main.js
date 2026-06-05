@@ -453,8 +453,31 @@ function getCategoryPctTotal() {
   return state.categories.reduce((sum, category) => sum + category.pct, 0)
 }
 
+function getAuthMessageState() {
+  if (!auth.error) {
+    return {
+      text: 'Use the same account to access your data everywhere.',
+      tone: 'neutral',
+    }
+  }
+
+  const normalized = auth.error.toLowerCase()
+  if (normalized.includes('success')) {
+    return {
+      text: auth.error,
+      tone: 'success',
+    }
+  }
+
+  return {
+    text: auth.error,
+    tone: 'error',
+  }
+}
+
 function renderLoginPage() {
   const isLogin = view.authMode === 'login'
+  const authMessage = getAuthMessageState()
 
   return `
     <section class="login-page">
@@ -471,11 +494,11 @@ function renderLoginPage() {
         <div class="auth-fields">
           <input id="auth-email" type="email" placeholder="Email" autocomplete="email" />
           <input id="auth-password" type="password" placeholder="Password (min 8 chars)" autocomplete="current-password" />
-          <button type="button" class="action-button action-button--primary" data-auth-submit>
+          <button type="button" class="action-button action-button--primary auth-submit" data-auth-submit>
             ${isLogin ? 'Login' : 'Create Account'}
           </button>
         </div>
-        <p class="auth-message">${auth.error || 'Use the same account to access your data everywhere.'}</p>
+        <p class="auth-message auth-message--${authMessage.tone}">${authMessage.text}</p>
       </article>
     </section>
   `

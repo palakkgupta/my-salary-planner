@@ -112,19 +112,35 @@ strong {
 
 .auth-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: minmax(200px, 1fr) minmax(200px, 1fr) auto;
   gap: 10px;
+  align-items: center;
 }
 
 .auth-fields input {
   border-radius: var(--radius-sm);
   border: 1px solid var(--line);
-  padding: 10px 12px;
+  padding: 14px 14px;
+  min-height: 56px;
   background: rgba(255, 255, 255, 0.86);
 }
 
 .auth-message {
+  margin-top: 10px;
   font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.auth-message--neutral {
+  color: var(--muted);
+}
+
+.auth-message--success {
+  color: var(--savings);
+}
+
+.auth-message--error {
+  color: var(--spending);
 }
 
 .login-page {
@@ -142,6 +158,31 @@ strong {
   background: var(--bg-elevated);
   box-shadow: var(--shadow);
   backdrop-filter: blur(12px);
+}
+
+.login-card h1 {
+  max-width: 11ch;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+}
+
+.login-card .hero-text {
+  margin-bottom: 8px;
+}
+
+.auth-submit {
+  min-width: 210px;
+  min-height: 56px;
+  font-size: 1.1rem;
+  padding-inline: 22px;
+}
+
+.auth-fields input:-webkit-autofill,
+.auth-fields input:-webkit-autofill:hover,
+.auth-fields input:-webkit-autofill:focus,
+.auth-fields input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset;
+  box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.9) inset;
+  -webkit-text-fill-color: var(--text);
 }
 
 .settings-page {
@@ -782,6 +823,11 @@ h2 {
 
   .auth-fields {
     grid-template-columns: 1fr;
+  }
+
+  .auth-submit {
+    width: 100%;
+    min-width: 0;
   }
 
   .login-card {
